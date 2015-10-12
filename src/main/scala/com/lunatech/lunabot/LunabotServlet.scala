@@ -1,23 +1,34 @@
 package com.lunatech.lunabot
 
 import org.scalatra._
-import scalate.ScalateSupport
+import org.json4s.{DefaultFormats, Formats}
+import org.scalatra.json._
 
-class LunabotServlet extends LunabotStack {
+class LunabotServlet extends ScalatraServlet with JacksonJsonSupport {
+
+  protected implicit val jsonFormats: Formats = DefaultFormats.withBigDecimal
+
+  before() {
+    contentType = formats("json")
+  }
 
   get("/") {
-    <html>
-      <body>
-        <p>Hello lunabot!</p>
-      </body>
-    </html>
+    HipChat.all
   }
 
   post("/repl") {
-    //curl --request POST --data "curl --request POST --data "hcUser=maria&msg=Hello&room=Lunatech" http://localhost:8080/repl=maria&message=Hello&room=Lunatech" http://localhost:8080/repl
     printBody(request.body)
   }
 
   def printBody(reqBody: String): String = reqBody
 
+}
+
+case class HipChat(name: String, msg: String)
+
+object HipChat {
+  var all = List(
+    HipChat("Maria", "Hello lunabot"),
+    HipChat("Dimitrios", "I am Dimitrios"),
+    HipChat("Howard", "Hello, I am Howard"))
 }
