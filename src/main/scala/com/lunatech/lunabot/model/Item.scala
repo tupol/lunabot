@@ -1,9 +1,6 @@
 package com.lunatech.lunabot.model
 
 /**
- * Created by dimitrioscharoulis on 12/10/15.
+ * This class is the model representation of the JSON object item
  */
-case class Item(message: Message, room: Room) {}
-
-
-object Item{}
+case class Item(message: Message, room: Room)

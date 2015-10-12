@@ -1,10 +1,7 @@
 package com.lunatech.lunabot.model
 
 /**
- * @author mariadominguez on 12/10/2015.
+ * This class is the model representation of the JSON object sent by hipchat
  */
 
-case class HipChatMessage(event: String, item: Item, webhook_id: String){}
-
-
-object HipChatMessage {}
+case class HipChatMessage(event: String, item: Item, webhook_id: String)

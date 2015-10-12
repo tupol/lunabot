@@ -1,8 +1,6 @@
 package com.lunatech.lunabot.model
 
 /**
- * Created by dimitrioscharoulis on 12/10/15.
+ * This class is the model representation of the JSON object message
  */
-case class Message(date: String, from: FromInfo, id: String, mentions: List[Any], message: String, `type`: String){}
-
-object Message {}
+case class Message(date: String, from: FromInfo, id: String, mentions: List[Any], message: String, `type`: String)

@@ -19,9 +19,9 @@ class LunabotServlet extends ScalatraServlet with JacksonJsonSupport {
 
   post("/repl") {
     printBody(request.body)
-    val hce = parse(request.body)
-    val json = hce.extract[HipChatMessage]
-    json.toString
+    val jsonValue = parse(request.body.replace("mention_name","mentionName"))
+    val hipchatMsg = jsonValue.extract[HipChatMessage]
+    hipchatMsg.toString
   }
 
   def printBody(reqBody: String): String = reqBody
