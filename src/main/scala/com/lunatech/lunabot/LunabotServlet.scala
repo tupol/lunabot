@@ -13,7 +13,7 @@ class LunabotServlet extends ScalatraServlet with JacksonJsonSupport {
   }
 
   get("/") {
-    HipChat.all
+    "Hello Lunabot!"
   }
 
   post("/repl") {
@@ -22,13 +22,4 @@ class LunabotServlet extends ScalatraServlet with JacksonJsonSupport {
 
   def printBody(reqBody: String): String = reqBody
 
-}
-
-case class HipChat(name: String, msg: String)
-
-object HipChat {
-  var all = List(
-    HipChat("Maria", "Hello lunabot"),
-    HipChat("Dimitrios", "I am Dimitrios"),
-    HipChat("Howard", "Hello, I am Howard"))
 }
