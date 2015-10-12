@@ -15,7 +15,9 @@ class LunabotServlet extends LunabotStack {
 
   post("/repl") {
     //curl --request POST --data "curl --request POST --data "hcUser=maria&msg=Hello&room=Lunatech" http://localhost:8080/repl=maria&message=Hello&room=Lunatech" http://localhost:8080/repl
-    println("HipChat user: " + {params("hcUser")} + "\nRoom: " + {params("room")} + "\nMessage: " + {params("msg")})
+    printBody(request.body)
   }
+
+  def printBody(reqBody: String): String = reqBody
 
 }
