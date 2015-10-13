@@ -5,8 +5,11 @@ import org.scalatra._
 import org.json4s.{DefaultFormats, Formats}
 import org.json4s.JsonDSL._
 import org.scalatra.json._
+import org.slf4j.LoggerFactory
 
 class LunabotServlet extends ScalatraServlet with JacksonJsonSupport {
+
+  val logger = LoggerFactory.getLogger(getClass)
 
   protected implicit val jsonFormats: Formats = DefaultFormats.withBigDecimal
 
@@ -19,7 +22,7 @@ class LunabotServlet extends ScalatraServlet with JacksonJsonSupport {
   }
 
   post("/repl") {
-    log(request.body)
+    logger.debug(request.body)
     val jsonValue = parse(request.body.replace("mention_name", "mentionName"))
     val hipchatMsg = jsonValue.extract[HipChatMessage]
     val replResponse = "Response from REPL"
