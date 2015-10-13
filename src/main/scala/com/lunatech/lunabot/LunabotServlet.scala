@@ -12,7 +12,6 @@ class LunabotServlet extends ScalatraServlet with JacksonJsonSupport {
 
   before() {
     contentType = formats("json")
-
   }
 
   get("/") {
@@ -20,6 +19,7 @@ class LunabotServlet extends ScalatraServlet with JacksonJsonSupport {
   }
 
   post("/repl") {
+    log(request.body)
     val jsonValue = parse(request.body.replace("mention_name", "mentionName"))
     val hipchatMsg = jsonValue.extract[HipChatMessage]
     val replResponse = "Response from REPL"
