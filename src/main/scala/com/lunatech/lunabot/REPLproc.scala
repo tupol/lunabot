@@ -1,7 +1,6 @@
 package com.lunatech.lunabot
 
 import java.io._
-
 import scala.io._
 import scala.sys.process._
 import scala.util.Try
