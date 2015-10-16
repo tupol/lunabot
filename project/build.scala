@@ -30,7 +30,8 @@ object LunabotBuild extends Build {
         "ch.qos.logback" % "logback-classic" % "1.1.2" % "runtime",
         "org.eclipse.jetty" % "jetty-webapp" % "9.2.10.v20150310" % "container;compile",
         "javax.servlet" % "javax.servlet-api" % "3.1.0" % "provided",
-        "net.databinder.dispatch" %% "dispatch-core" % "0.11.2"
+        "net.databinder.dispatch" %% "dispatch-core" % "0.11.2",
+        "org.scalatest" % "scalatest_2.11" % "2.2.4" % "test"
       ),
       scalateTemplateConfig in Compile <<= (sourceDirectory in Compile){ base =>
         Seq(
