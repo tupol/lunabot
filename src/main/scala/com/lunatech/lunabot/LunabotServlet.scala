@@ -7,7 +7,8 @@ import org.slf4j.LoggerFactory
 import org.scalatra.json._
 import scala.sys.process._
 import dispatch._, Defaults._
-import scala.util.{Failure, Success}
+import scala.util.{Failure, Success, Try}
+import scala.concurrent.Future
 
 
 /**
@@ -39,7 +40,7 @@ class LunabotServlet extends ScalatraServlet with JacksonJsonSupport {
     val authToken = System.getenv("AUTH_TOKEN")
     val urlStr = "https://api.hipchat.com/v2/room/roomId/notification?auth_token="
 
-    val executionFuture: Future[String] = Future {
+    val executionFuture: Future[Try[String]] = Future {
       val cmd1: String = hipchatMsg.item.message.message.replace("/scala ", "")
       REPLproc.run(cmd1)
     }
@@ -47,10 +48,10 @@ class LunabotServlet extends ScalatraServlet with JacksonJsonSupport {
     executionFuture.onComplete {
       case Success(result) => {
         //Send response to HipChat Room
-        val myRequest = sendAsyncResponse(urlStr, hipchatMsg, authToken) <<
+        val myRequest = result.map(str => sendAsyncResponse(urlStr, hipchatMsg, authToken) <<
           """{"color": "green", "message": """ + "\"" + "@" + hipchatMsg.item.message.from.mentionName + " " +
-            result.replace("\n", "\\n") + "\"" + """, "notify": false, "message_format": "text"}"""
-        dispatch.Http(myRequest)
+            str.replace("\n", "\\n") + "\"" + """, "notify": false, "message_format": "text"}""")
+        myRequest.map(dispatch.Http(_))
       }
       case Failure(ex: Exception) => {
         val myRequest = sendAsyncResponse(urlStr, hipchatMsg, authToken) <<
