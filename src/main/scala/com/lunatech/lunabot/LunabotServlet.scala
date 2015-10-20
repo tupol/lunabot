@@ -46,20 +46,20 @@ class LunabotServlet(val tokens: Map[Int, String]) extends ScalatraServlet with 
     val jsonValue: JValue = parse(request.body.replace("mention_name", "mentionName"))
     val hipChatMessage: HipChatMessage = jsonValue.extract[HipChatMessage]
     val cmd: String = hipChatMessage.item.message.message.replace("/scala ", "")
+    logger.debug(s"Processing $cmd")
 
-    lazy val futureResponse: Try[JValue] = evaluateExpression(hipChatMessage.item.message.message)
+    lazy val triedResponse: Try[JValue] = evaluateExpression(cmd)
     val maybeResponse: Option[URL] = responseUrl(hipChatMessage.item.room.id)
 
     val maybeResult: Either[String, (URL, JValue)] = maybeResponse match {
       case Some(url) =>
-        futureResponse match {
+        triedResponse match {
           case Success(value) => Right(url, value)
           case Failure(ex) =>
             Right(url, responseJValue(s"Sorry your scala code has failed with ${ex.getMessage}", "red"))
         }
       case None =>
-        val message: String = s"Unable to find the roken for the room ${hipChatMessage.item.room.id}"
-        logger.warn(message)
+        val message: String = s"Unable to find the token for the room ${hipChatMessage.item.room.id}"
         Left(message)
 
     }
@@ -79,7 +79,7 @@ class LunabotServlet(val tokens: Map[Int, String]) extends ScalatraServlet with 
   def constructRequest(url: String): Req = {
     dispatch.url(url).setContentType("application/json", "UTF-8").POST
   }
-  
+
   /*
    * Creates the url where Lunabot sends its POST request
    * @param hipchatMsg The message that is included in the post request received by Lunabot
@@ -88,7 +88,7 @@ class LunabotServlet(val tokens: Map[Int, String]) extends ScalatraServlet with 
     t => new URL(s"https://api.hipchat.com/v2/room/$roomId/notification?auth_token=$t")
   }
 
-  private def evaluateExpression(expression: String): Try[JValue] = REPLproc.run(expression).map {
+  private def evaluateExpression(expression: String): Try[JValue] = ReplProc.run(expression).map {
     responseJValue(_, "green")
   }
 
@@ -99,4 +99,3 @@ class LunabotServlet(val tokens: Map[Int, String]) extends ScalatraServlet with 
       (MESSAGE_FORMAT -> messageFormat))
 
 }
-
