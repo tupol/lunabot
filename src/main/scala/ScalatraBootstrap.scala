@@ -17,6 +17,6 @@ class ScalatraBootstrap extends LifeCycle {
       at => at.getInt("roomId") -> at.getString("token")
     }.toMap
 
-    context.mount(new LunabotServlet(tokens), "/*")
+    context.mount(new LunabotServlet(tokens, ReplProc, DispatchHipChatResponder), "/*")
   }
 }

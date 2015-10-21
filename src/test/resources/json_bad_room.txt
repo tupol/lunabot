@@ -14,7 +14,7 @@
             "type": "message"
         },
         "room": {
-            "id": 1,
+            "id": 9999999,
             "name": "Project Lunabot"
         }
     },
